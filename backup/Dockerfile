@@ -25,6 +25,9 @@ RUN pip install distribute
 
 RUN apt-get -y install barman
 
+ADD id_rsa /var/lib/barman/.ssh/id_rsa
+RUN chown -R barman.barman /var/lib/barman/.ssh
+
 #RUN service postgresql start
 
 CMD ["/bin/bash"]
