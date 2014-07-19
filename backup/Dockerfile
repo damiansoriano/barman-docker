@@ -25,12 +25,27 @@ RUN pip install distribute
 
 RUN apt-get -y install barman
 
+# Add pg public key and authorized_key
+ADD pg_id_rsa.pub /var/lib/barman/.ssh/pg_id_rsa.pub
+ADD authorized_keys /var/lib/barman/.ssh/authorized_keys
+
+RUN chown -R barman.barman /var/lib/barman/.ssh
+
+# Add barman keys and change permisions
 ADD id_rsa /var/lib/barman/.ssh/id_rsa
 ADD id_rsa.pub /var/lib/barman/.ssh/id_rsa.pub
 ADD ssh_config /var/lib/barman/.ssh/config
 RUN chown -R barman.barman /var/lib/barman/.ssh
 RUN chmod 700 /var/lib/barman/.ssh/id_rsa
 
+# From http://stackoverflow.com/questions/18173889/cannot-access-centos-sshd-on-docker
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
+
 #RUN service postgresql start
+
+EXPOSE 22
+
+RUN /etc/init.d/ssh start
 
 CMD ["/bin/bash"]
