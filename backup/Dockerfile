@@ -1,4 +1,5 @@
 FROM postgres:latest
+FROM python:2
 
 MAINTAINER Damian Soriano <ds@ingadhoc.com>
 
