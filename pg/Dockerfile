@@ -25,6 +25,8 @@ RUN pip install distribute
 
 RUN apt-get -y install barman
 
+RUN apt-get -y install vim
+
 # Add backup public key and authorized_key
 ADD backup_id_rsa.pub /var/lib/postgresql/.ssh/backup_id_rsa.pub
 ADD authorized_keys /var/lib/postgresql/.ssh/authorized_keys
@@ -41,6 +43,12 @@ RUN chmod 700 /var/lib/postgresql/.ssh/id_rsa
 # From http://stackoverflow.com/questions/18173889/cannot-access-centos-sshd-on-docker
 RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 RUN sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config
+
+# Configure PostgreSQL to receive TPC/IP connections
+ADD postgresql.conf /etc/postgresql/9.3/main/postgresql.conf
+ADD pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+RUN service postgresql restart
 
 EXPOSE 22
 
