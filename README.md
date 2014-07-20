@@ -9,7 +9,17 @@ To launch the backup server run:
 
     sudo docker run -ti --name backup --link pg:pg damiansoriano/barman-docker-backup
 
-Or if we want to connnect the other way arround:
+After running the containers do the following steps:
+
+* In the pg container run `/etc/init.d/ssh start`
+* In the pg container, modify the file `/etc/postgresql/9.3/main/postgresql.conf`, changing backup domain with the IP if the backup container
+```
+archive_command = 'rsync -a %p barman@backup:/var/lib/barman/main/incoming/%f'
+```
+* In the backup container run `/etc/init.d/ssh start`
+
+To link containers from pg to backup you should run containers this way:
 
     sudo docker run -ti --name backup damiansoriano/barman-docker-backup
     sudo docker run -ti --name pg --link backup:backup damiansoriano/barman-docker-pg
+
