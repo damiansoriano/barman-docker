@@ -16,7 +16,9 @@ After running the containers do the following steps:
 ```
 archive_command = 'rsync -a %p barman@backup:/var/lib/barman/main/incoming/%f'
 ```
+* Restart PostgreSQL server with ```service postgresql restart```
 * In the backup container run `/etc/init.d/ssh start`
+* From the pg container, login as postgres user and try ```ssh barman@backup``` (where backup is the IP of the backup host) to allow the connections from pg to backup.
 
 To link containers from pg to backup you should run containers this way:
 
