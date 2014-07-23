@@ -26,6 +26,7 @@ RUN pip install distribute
 RUN apt-get -y install barman
 
 RUN apt-get -y install vim
+RUN apt-get -y install man
 
 # Add backup public key and authorized_key
 ADD backup_id_rsa.pub /var/lib/postgresql/.ssh/backup_id_rsa.pub

@@ -26,6 +26,7 @@ RUN pip install distribute
 RUN apt-get -y install barman
 
 RUN apt-get -y install vim
+RUN apt-get -y install man
 
 # Add pg public key and authorized_key
 ADD pg_id_rsa.pub /var/lib/barman/.ssh/pg_id_rsa.pub
