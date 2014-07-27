@@ -1,4 +1,4 @@
-barman-docker
+Testing Barman with Docker: barman-docker
 =============
 
 To launch the postgres container run:
@@ -78,11 +78,12 @@ test02=# INSERT INTO table02 VALUES (3), (4);
 INSERT 0 2
 ```
 
-After that we should see incomming files in the folder /var/lib/barman/main/incoming, in the backup container. This WAL archives containes information of the creationg of the second database. We can use ```barman cron``` to move them to /var/lib/barman/main/wals.
+After that we should see incomming files in the folder ```/var/lib/barman/main/incoming```, in the backup container. This WAL archives containes information of the creationg of the second database. We can use ```barman cron``` to move them to ```/var/lib/barman/main/wals```.
 
-
+```
 barman@db64ec59f7d3:~/main/wals$ barman list-backup main
 main 20140727T105532 - Sun Jul 27 10:55:40 2014 - Size: 24.9 MiB - WAL Size: 16.0 MiB
+```
 
 Restoring
 --------
@@ -119,7 +120,7 @@ options as they might interfere with your current recovery attempt:
     ssl_key_file = '/etc/ssl/private/ssl-cert-snakeoil.key'		# (change requires restart)
 ```
 
-With the root user in the backup container, restore the structure to proceed with the recovery as follows:
+With the root user in the backup container, restore the structure to proceed with the recovery as follows. You will need to delete the pg_xlog/ folder content since it may contain information that will not be used for the recovery process.
 
 ```
 root@db64ec59f7d3:/# cd /var/lib/postgresql/9.3/
@@ -127,10 +128,15 @@ root@db64ec59f7d3:/var/lib/postgresql/9.3# rm -r main/
 root@db64ec59f7d3:/var/lib/postgresql/9.3# cp -r /var/lib/barman/pg/ ./main
 root@db64ec59f7d3:/var/lib/postgresql/9.3# cp -r /var/lib/barman/main/wals/ ./wals
 root@db64ec59f7d3:/var/lib/postgresql/9.3# echo restore_command = \'cp /var/lib/postgresql/9.3/wals/0000000100000000/%f "%p"\' > main/recovery.conf
+root@db64ec59f7d3:/var/lib/postgresql/9.3# rm -r /var/lib/postgresql/9.3/main/pg_xlog/*
 root@db64ec59f7d3:/var/lib/postgresql/9.3# chown -R postgres.postgres *
 ```
 
-Now, if the PostgreSQL service is started it will backup the server taking into account the WAL archives. The backup was sucessfully restored.
+Now, if the PostgreSQL service is started it will backup the server taking into account the WAL archives. The backup was sucessfully restored. You can take a look at the PostgreSQL log with the following command:
+
+```
+root@db64ec59f7d3:/# tail -n 200 /var/log/postgresql/postgresql-9.3-main.log
+```
 
 Miscellaneous
 --------
