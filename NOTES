@@ -4,3 +4,4 @@ Barman, Backup and Recovery Manager for PostgreSQL Tutorial: http://docs.pgbarma
 SSH login without password: http://www.linuxproblem.org/art_9.html
 How to disable SSH host key checking: http://linuxcommando.blogspot.it/2008/10/how-to-disable-ssh-host-key-checking.html
 How Do I Enable remote access to PostgreSQL database server?: http://www.cyberciti.biz/tips/postgres-allow-remote-access-tcp-connection.html
+Better PostgreSQL Backups with WAL archiving: http://www.anchor.com.au/documentation/better-postgresql-backups-with-wal-archiving/
